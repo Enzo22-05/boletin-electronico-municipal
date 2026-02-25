@@ -2,6 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { MESES } from "../data";
 import { useDocs } from "../context/DocumentsContext";
 
+
 function Widget({ title, children }) {
   return (
     <div className="bg-white border border-gray-200 mb-4">
@@ -148,6 +149,11 @@ export default function Sidebar() {
           </ul>
         </Widget>
       )}
+      <img
+  src="/bem2.jpeg"
+  alt="Información municipal"
+  className="w-full rounded-xl mb-6 shadow-md"
+/>
 
     </aside>
   );
