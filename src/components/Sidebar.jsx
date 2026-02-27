@@ -65,7 +65,7 @@ export default function Sidebar() {
   const recientes = [...docs].slice(0, 5);
 
   return (
-    <aside className="w-60 shrink-0">
+    <aside className="hidden md:block w-60 shrink-0">
 
       <Widget title="Calendario">
         <div className="flex items-center justify-between mb-2">
@@ -152,7 +152,7 @@ export default function Sidebar() {
       <img
   src="/bem2.jpeg"
   alt="Información municipal"
-  className="w-full rounded-xl mb-6 shadow-md"
+  className="w-full rounded-xl mb-6 shadow-md object-cover"
 />
 
     </aside>

@@ -7,16 +7,15 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Footer from "./components/Footer";
 import Inicio from "./pages/Inicio";
-import BoletinOficial from "./pages/BoletinOficial";
 import Ordenanzas from "./pages/Ordenanzas";
 import Decretos from "./pages/Decretos";
 import Resoluciones from "./pages/Resoluciones";
 import Licitaciones from "./pages/Licitaciones";
 import Contacto from "./pages/Contacto";
-import Bem from "./pages/Bem";
 import Legislacion from "./pages/Legislacion";
 import AdminLogin from "./pages/AdminLogin";
 import AdminSubir from "./pages/AdminSubir";
+import EjecucionPresupuestaria from "./pages/EjecucionPresupuestaria";
 
 function Layout() {
   return (
@@ -27,19 +26,18 @@ function Layout() {
       <div className="max-w-6xl mx-auto w-full px-4 py-5 flex gap-5 items-start flex-1">
         <Sidebar />
         <main className="flex-1 min-w-0">
-          <Routes>
-            <Route path="/" element={<Inicio />} />
-            <Route path="/boletin-oficial" element={<BoletinOficial />} />
-            <Route path="/ordenanzas" element={<Ordenanzas />} />
-            <Route path="/decretos" element={<Decretos />} />
-            <Route path="/resoluciones" element={<Resoluciones />} />
-            <Route path="/licitaciones" element={<Licitaciones />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/bem" element={<Bem />} />
-            <Route path="/legislacion" element={<Legislacion />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/subir" element={<AdminSubir />} />
-          </Routes>
+        <Routes>
+  <Route path="/" element={<Inicio />} />
+  <Route path="/ordenanzas" element={<Ordenanzas />} />
+  <Route path="/decretos" element={<Decretos />} />
+  <Route path="/resoluciones" element={<Resoluciones />} />
+  <Route path="/licitaciones" element={<Licitaciones />} />
+  <Route path="/ejecucion-presupuestaria" element={<EjecucionPresupuestaria />} />
+  <Route path="/legislacion" element={<Legislacion />} />
+  <Route path="/contacto" element={<Contacto />} />
+  <Route path="/admin/login" element={<AdminLogin />} />
+  <Route path="/admin/subir" element={<AdminSubir />} />
+</Routes>
         </main>
       </div>
       <Footer />

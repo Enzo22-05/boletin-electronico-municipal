@@ -1,23 +1,20 @@
 export const NAV_LINKS = [
   { label: "Inicio", path: "/" },
-  { label: "Boletín Oficial", path: "/boletin-oficial" },
   { label: "Ordenanzas", path: "/ordenanzas" },
   { label: "Decretos", path: "/decretos" },
   { label: "Resoluciones", path: "/resoluciones" },
   { label: "Licitaciones", path: "/licitaciones" },
+  { label: "Ejecución Presupuestaria", path: "/ejecucion-presupuestaria" },
   { label: "Contacto", path: "/contacto" },
-  { label: "BEM", path: "/bem" },
-  { label: "Legislación", path: "/legislacion" },
+  { label: "Legislacion", path: "/legislacion" },
 ];
 
 export const TIPOS_DOCUMENTO = [
-  "Boletín Oficial",
   "Ordenanza",
   "Decreto",
   "Resolución",
   "Licitación",
-  "BEM",
-  "Legislación",
+  "Ejecución Presupuestaria",
 ];
 
 export const MESES = [
