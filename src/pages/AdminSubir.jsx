@@ -9,10 +9,12 @@ export default function AdminSubir() {
   const { docs, addDoc, removeDoc } = useDocs();
 
   const fileRef = useRef(null);
+
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [tipo, setTipo] = useState(TIPOS_DOCUMENTO[0]);
   const [archivo, setArchivo] = useState(null);
+  const [fechaPublicacion, setFechaPublicacion] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -31,48 +33,78 @@ export default function AdminSubir() {
   const handleFile = (e) => {
     const f = e.target.files[0];
     if (!f) return;
-    if (f.type !== "application/pdf") { setError("Solo se permiten archivos PDF."); return; }
+
+    if (f.type !== "application/pdf") {
+      setError("Solo se permiten archivos PDF.");
+      return;
+    }
+
     setArchivo(f);
     setError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!titulo.trim()) { setError("El título es obligatorio."); return; }
-    if (!archivo) { setError("Seleccioná un archivo PDF."); return; }
-
+  
+    if (!titulo.trim()) {
+      setError("El título es obligatorio.");
+      return;
+    }
+  
+    if (!archivo) {
+      setError("Seleccioná un archivo PDF.");
+      return;
+    }
+  
+    if (!fechaPublicacion) {
+      setError("Seleccioná una fecha de publicación.");
+      return;
+    }
+  
     setLoading(true);
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const now = new Date();
-      addDoc({
-        id: Date.now(),
-        titulo: titulo.trim(),
-        descripcion: descripcion.trim(),
-        tipo,
-        nombreArchivo: archivo.name,
-        url: ev.target.result,
-        fecha: now.toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" }),
-        fechaCorta: now.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" }),
-        mes: now.getMonth(),
-        anio: now.getFullYear(),
-      });
-      setLoading(false);
-      setSuccess(true);
-      setTitulo("");
-      setDescripcion("");
-      setTipo(TIPOS_DOCUMENTO[0]);
-      setArchivo(null);
-      if (fileRef.current) fileRef.current.value = "";
-    };
-    reader.readAsDataURL(archivo);
+  
+    const fechaObj = new Date(fechaPublicacion + "T00:00:00");
+  
+    // ✅ GENERAMOS URL TEMPORAL
+    const url = URL.createObjectURL(archivo);
+  
+    addDoc({
+      id: Date.now(),
+      titulo,
+      descripcion,
+      tipo,
+      url,
+      nombreArchivo: archivo.name,
+      fecha: fechaObj.toLocaleDateString("es-AR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }),
+      fechaCorta: fechaObj.toLocaleDateString("es-AR"),
+      mes: fechaObj.getMonth(),
+      anio: fechaObj.getFullYear(),
+      fechaISO: fechaObj.toISOString(),
+    });
+  
+    setLoading(false);
+    setSuccess(true);
+  
+    setTitulo("");
+    setDescripcion("");
+    setTipo(TIPOS_DOCUMENTO[0]);
+    setArchivo(null);
+    setFechaPublicacion("");
+    if (fileRef.current) fileRef.current.value = "";
   };
 
   return (
     <div>
       <div className="bg-white border border-gray-200 border-l-4 border-l-[#1a3a6c] px-4 py-2.5 mb-4 text-lg font-bold text-[#1a3a6c] flex items-center justify-between">
         <span>Panel de Administración</span>
-        <Link to="/" className="text-sm font-normal text-gray-500 hover:text-[#1a3a6c] no-underline">
+        <Link
+          to="/"
+          className="text-sm font-normal text-gray-500 hover:text-[#1a3a6c] no-underline"
+        >
           ← Volver al inicio
         </Link>
       </div>
@@ -85,12 +117,20 @@ export default function AdminSubir() {
         {success && (
           <div className="mb-4 bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 flex justify-between items-center">
             <span>Documento publicado correctamente.</span>
-            <button onClick={() => setSuccess(false)} className="text-green-600 hover:text-green-800 cursor-pointer bg-transparent border-none text-lg leading-none">&times;</button>
+            <button
+              onClick={() => setSuccess(false)}
+              className="text-green-600 hover:text-green-800 cursor-pointer bg-transparent border-none text-lg leading-none"
+            >
+              &times;
+            </button>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/* Tipo y título */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">
                 Tipo de documento <span className="text-red-500">*</span>
@@ -113,13 +153,30 @@ export default function AdminSubir() {
               <input
                 type="text"
                 value={titulo}
-                onChange={(e) => { setTitulo(e.target.value); setError(""); }}
+                onChange={(e) => {
+                  setTitulo(e.target.value);
+                  setError("");
+                }}
                 placeholder={`Ej: ${tipo} N° 123/2026`}
                 className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-[#1a3a6c]"
               />
             </div>
           </div>
 
+          {/* Fecha */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">
+              Fecha de publicación <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              value={fechaPublicacion}
+              onChange={(e) => setFechaPublicacion(e.target.value)}
+              className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-[#1a3a6c]"
+            />
+          </div>
+
+          {/* Descripción */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
               Descripción <span className="text-gray-400 font-normal">(opcional)</span>
@@ -133,6 +190,7 @@ export default function AdminSubir() {
             />
           </div>
 
+          {/* Archivo */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
               Archivo PDF <span className="text-red-500">*</span>
@@ -145,12 +203,22 @@ export default function AdminSubir() {
                 <p className="text-sm text-[#1a3a6c] font-semibold">{archivo.name}</p>
               ) : (
                 <>
-                  <p className="text-sm text-gray-400">Hacé clic para seleccionar un PDF</p>
-                  <p className="text-xs text-gray-300 mt-0.5">Solo archivos .pdf</p>
+                  <p className="text-sm text-gray-400">
+                    Hacé clic para seleccionar un PDF
+                  </p>
+                  <p className="text-xs text-gray-300 mt-0.5">
+                    Solo archivos .pdf
+                  </p>
                 </>
               )}
             </div>
-            <input ref={fileRef} type="file" accept="application/pdf" onChange={handleFile} className="hidden" />
+            <input
+              ref={fileRef}
+              type="file"
+              accept="application/pdf"
+              onChange={handleFile}
+              className="hidden"
+            />
           </div>
 
           {error && <p className="text-xs text-red-600">{error}</p>}
@@ -164,34 +232,6 @@ export default function AdminSubir() {
           </button>
         </form>
       </div>
-
-      {docs.length > 0 && (
-        <div className="bg-white border border-gray-200">
-          <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 text-xs font-bold text-gray-600 uppercase tracking-wide">
-            Documentos publicados ({docs.length})
-          </div>
-          <ul className="divide-y divide-gray-100">
-            {docs.map((d) => (
-              <li key={d.id} className="flex items-center justify-between px-4 py-3 gap-4">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <span className="bg-blue-50 text-[#1a3a6c] text-xs px-2 py-0.5 rounded-sm">{d.tipo}</span>
-                    <span className="text-xs text-gray-400">{d.fechaCorta}</span>
-                  </div>
-                  <p className="text-sm font-semibold text-[#1a3a6c] truncate">{d.titulo}</p>
-                  <p className="text-xs text-gray-400">{d.nombreArchivo}</p>
-                </div>
-                <button
-                  onClick={() => removeDoc(d.id)}
-                  className="text-xs text-red-500 hover:text-red-700 cursor-pointer bg-transparent border border-red-200 hover:border-red-400 px-2 py-1 transition-colors shrink-0"
-                >
-                  Eliminar
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
