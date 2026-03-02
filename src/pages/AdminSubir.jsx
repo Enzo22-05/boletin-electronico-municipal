@@ -11,7 +11,7 @@ export default function AdminSubir() {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [tipo, setTipo] = useState(TIPOS_DOCUMENTO[0]);
-  const [archivo, setArchivo] = useState(""); // ahora guarda el link
+  const [linkDrive, setLinkDrive] = useState("");
   const [fechaPublicacion, setFechaPublicacion] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -35,12 +35,10 @@ export default function AdminSubir() {
       setError("El título es obligatorio.");
       return;
     }
-
-    if (!archivo.trim()) {
-      setError("Ingresá el link del PDF de Google Drive.");
+    if (!linkDrive.trim()) {
+      setError("El link de Google Drive es obligatorio.");
       return;
     }
-
     if (!fechaPublicacion) {
       setError("Seleccioná una fecha de publicación.");
       return;
@@ -55,8 +53,8 @@ export default function AdminSubir() {
       titulo,
       descripcion,
       tipo,
-      url: archivo, // ahora usamos directamente el link de Drive
-      nombreArchivo: titulo, // puedes cambiarlo si querés otro nombre
+      url: linkDrive, // link de Google Drive (preview)
+      nombreArchivo: titulo,
       fecha: fechaObj.toLocaleDateString("es-AR", {
         day: "2-digit",
         month: "long",
@@ -70,13 +68,12 @@ export default function AdminSubir() {
 
     setLoading(false);
     setSuccess(true);
-
-    // limpiar campos
     setTitulo("");
     setDescripcion("");
     setTipo(TIPOS_DOCUMENTO[0]);
-    setArchivo("");
+    setLinkDrive("");
     setFechaPublicacion("");
+    setError("");
   };
 
   return (
@@ -109,7 +106,6 @@ export default function AdminSubir() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Tipo y título */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">
@@ -135,17 +131,13 @@ export default function AdminSubir() {
               <input
                 type="text"
                 value={titulo}
-                onChange={(e) => {
-                  setTitulo(e.target.value);
-                  setError("");
-                }}
+                onChange={(e) => setTitulo(e.target.value)}
                 placeholder={`Ej: ${tipo} N° 123/2026`}
                 className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-[#1a3a6c]"
               />
             </div>
           </div>
 
-          {/* Fecha */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
               Fecha de publicación <span className="text-red-500">*</span>
@@ -158,36 +150,33 @@ export default function AdminSubir() {
             />
           </div>
 
-          {/* Descripción */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
-              Descripción <span className="text-gray-400 font-normal">(opcional)</span>
-            </label>
-            <textarea
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              rows={2}
-              placeholder="Breve descripción del contenido..."
-              className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-[#1a3a6c] resize-none"
-            />
-          </div>
-
-          {/* Link PDF */}
-          <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">
-              Link del PDF en Google Drive <span className="text-red-500">*</span>
+              Link de Google Drive <span className="text-red-500">*</span>
             </label>
             <input
-              type="url"
-              value={archivo}
-              onChange={(e) => {
-                setArchivo(e.target.value);
-                setError("");
-              }}
-              placeholder="https://drive.google.com/file/d/ID_DEL_PDF/preview"
+              type="text"
+              value={linkDrive}
+              onChange={(e) => setLinkDrive(e.target.value)}
+              placeholder="Ej: https://drive.google.com/file/d/ID_DEL_PDF/preview"
               className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-[#1a3a6c]"
             />
           </div>
+
+          {descripcion && (
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">
+                Descripción <span className="text-gray-400 font-normal">(opcional)</span>
+              </label>
+              <textarea
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                rows={2}
+                placeholder="Breve descripción del contenido..."
+                className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-[#1a3a6c] resize-none"
+              />
+            </div>
+          )}
 
           {error && <p className="text-xs text-red-600">{error}</p>}
 

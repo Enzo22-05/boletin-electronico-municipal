@@ -26,18 +26,14 @@ export default function DocList({ tipo, titulo }) {
     );
   }
 
-  // Orden automático por fecha
   items = [...items].sort(
     (a, b) => new Date(b.fechaISO || 0) - new Date(a.fechaISO || 0)
   );
 
-  // Agrupar por año si no hay filtro de mes
   const agrupados = {};
   if (mesFiltro === null) {
     items.forEach((doc) => {
-      if (!agrupados[doc.anio]) {
-        agrupados[doc.anio] = [];
-      }
+      if (!agrupados[doc.anio]) agrupados[doc.anio] = [];
       agrupados[doc.anio].push(doc);
     });
   }
@@ -73,10 +69,7 @@ export default function DocList({ tipo, titulo }) {
           .sort((a, b) => b - a)
           .map((anio) => (
             <div key={anio} className="mb-6">
-              <h2 className="text-sm font-bold text-gray-500 mb-3">
-                Año {anio}
-              </h2>
-
+              <h2 className="text-sm font-bold text-gray-500 mb-3">Año {anio}</h2>
               <div className="space-y-3">
                 {agrupados[anio].map((d) => (
                   <Card key={d.id} d={d} isAdmin={isAdmin} removeDoc={removeDoc} />
@@ -95,15 +88,13 @@ export default function DocList({ tipo, titulo }) {
   );
 }
 
-// Card modificado para usar links de Drive
 function Card({ d, isAdmin, removeDoc }) {
-  // Extraemos el ID del PDF de la URL de Drive si es preview
-  // Para descarga directa: https://drive.google.com/uc?export=download&id=ID_DEL_PDF
+  // Descarga directa de Drive
   const driveIdMatch = d.url.match(/\/d\/(.*?)\//);
   const driveId = driveIdMatch ? driveIdMatch[1] : null;
   const downloadUrl = driveId
     ? `https://drive.google.com/uc?export=download&id=${driveId}`
-    : d.url; // fallback si no encuentra ID
+    : d.url;
 
   return (
     <div className="bg-white border border-gray-200 p-4 flex items-start justify-between gap-4">
@@ -112,16 +103,11 @@ function Card({ d, isAdmin, removeDoc }) {
           <span className="bg-red-100 text-red-700 text-xs px-2 py-0.5 font-semibold rounded-sm">
             PDF
           </span>
-          <span className="bg-blue-50 text-[#1a3a6c] text-xs px-2 py-0.5 rounded-sm">
-            {d.tipo}
-          </span>
+          <span className="bg-blue-50 text-[#1a3a6c] text-xs px-2 py-0.5 rounded-sm">{d.tipo}</span>
           <span className="text-xs text-gray-400">{d.fechaCorta}</span>
         </div>
-
         <h3 className="text-sm font-semibold text-[#1a3a6c] mb-0.5">{d.titulo}</h3>
-
         {d.descripcion && <p className="text-xs text-gray-500">{d.descripcion}</p>}
-
         <p className="text-xs text-gray-400 mt-1">{d.nombreArchivo}</p>
       </div>
 
@@ -134,14 +120,12 @@ function Card({ d, isAdmin, removeDoc }) {
         >
           Ver
         </a>
-
         <a
           href={downloadUrl}
           className="bg-[#1a3a6c] text-white text-xs px-3 py-1.5 hover:bg-[#0d2550] no-underline"
         >
           Descargar
         </a>
-
         {isAdmin && (
           <button
             onClick={() => removeDoc(d.id)}
