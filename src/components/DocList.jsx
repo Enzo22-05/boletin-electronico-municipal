@@ -1,22 +1,20 @@
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useDocs } from "../context/DocumentsContext";
 import { useAdmin } from "../context/AdminContext";
-import { Link } from "react-router-dom";
 import { MESES } from "../data";
+import docsData from "../docs.json"; // <-- JSON con tus documentos
 
 export default function DocList({ tipo, titulo }) {
-  const { docs, removeDoc } = useDocs();
   const { isAdmin } = useAdmin();
+  const [docs, setDocs] = useState([]);
   const [searchParams] = useSearchParams();
 
-  const mesFiltro =
-    searchParams.get("mes") !== null
-      ? parseInt(searchParams.get("mes"))
-      : null;
+  useEffect(() => {
+    setDocs(docsData); // cargamos todos los documentos desde JSON
+  }, []);
 
-  const anioFiltro = searchParams.get("anio")
-    ? parseInt(searchParams.get("anio"))
-    : null;
+  const mesFiltro = searchParams.get("mes") ? parseInt(searchParams.get("mes")) : null;
+  const anioFiltro = searchParams.get("anio") ? parseInt(searchParams.get("anio")) : null;
 
   let items = tipo ? docs.filter((d) => d.tipo === tipo) : docs;
 
@@ -26,9 +24,7 @@ export default function DocList({ tipo, titulo }) {
     );
   }
 
-  items = [...items].sort(
-    (a, b) => new Date(b.fechaISO || 0) - new Date(a.fechaISO || 0)
-  );
+  items = [...items].sort((a, b) => new Date(b.fechaCorta) - new Date(a.fechaCorta));
 
   const agrupados = {};
   if (mesFiltro === null) {
@@ -39,9 +35,7 @@ export default function DocList({ tipo, titulo }) {
   }
 
   const mesLabel =
-    mesFiltro !== null
-      ? ` — ${MESES[mesFiltro]}${anioFiltro ? " " + anioFiltro : ""}`
-      : "";
+    mesFiltro !== null ? ` — ${MESES[mesFiltro]}${anioFiltro ? " " + anioFiltro : ""}` : "";
 
   return (
     <div>
@@ -50,14 +44,6 @@ export default function DocList({ tipo, titulo }) {
           {titulo}
           {mesLabel}
         </span>
-        {isAdmin && (
-          <Link
-            to="/admin/subir"
-            className="text-sm font-normal bg-[#1a3a6c] text-white px-3 py-1 hover:bg-[#0d2550] no-underline"
-          >
-            + Subir documento
-          </Link>
-        )}
       </div>
 
       {items.length === 0 ? (
@@ -72,7 +58,7 @@ export default function DocList({ tipo, titulo }) {
               <h2 className="text-sm font-bold text-gray-500 mb-3">Año {anio}</h2>
               <div className="space-y-3">
                 {agrupados[anio].map((d) => (
-                  <Card key={d.id} d={d} isAdmin={isAdmin} removeDoc={removeDoc} />
+                  <Card key={d.id} d={d} isAdmin={isAdmin} />
                 ))}
               </div>
             </div>
@@ -80,7 +66,7 @@ export default function DocList({ tipo, titulo }) {
       ) : (
         <div className="space-y-3">
           {items.map((d) => (
-            <Card key={d.id} d={d} isAdmin={isAdmin} removeDoc={removeDoc} />
+            <Card key={d.id} d={d} isAdmin={isAdmin} />
           ))}
         </div>
       )}
@@ -88,7 +74,7 @@ export default function DocList({ tipo, titulo }) {
   );
 }
 
-function Card({ d, isAdmin, removeDoc }) {
+function Card({ d, isAdmin }) {
   // Descarga directa de Drive
   const driveIdMatch = d.url.match(/\/d\/(.*?)\//);
   const driveId = driveIdMatch ? driveIdMatch[1] : null;
@@ -128,7 +114,7 @@ function Card({ d, isAdmin, removeDoc }) {
         </a>
         {isAdmin && (
           <button
-            onClick={() => removeDoc(d.id)}
+            onClick={() => alert("Para esta opción JSON, eliminar requiere editar docs.json")}
             className="text-red-600 text-xs hover:underline"
           >
             Eliminar
