@@ -26,12 +26,12 @@ export default function DocList({ tipo, titulo }) {
     );
   }
 
-  // ✅ ORDEN AUTOMÁTICO
+  // Orden automático por fecha
   items = [...items].sort(
     (a, b) => new Date(b.fechaISO || 0) - new Date(a.fechaISO || 0)
   );
 
-  // ✅ AGRUPAR POR AÑO (solo si no hay filtro de mes)
+  // Agrupar por año si no hay filtro de mes
   const agrupados = {};
   if (mesFiltro === null) {
     items.forEach((doc) => {
@@ -69,7 +69,6 @@ export default function DocList({ tipo, titulo }) {
           No hay publicaciones.
         </div>
       ) : mesFiltro === null ? (
-        // ✅ Vista agrupada por año
         Object.keys(agrupados)
           .sort((a, b) => b - a)
           .map((anio) => (
@@ -86,7 +85,6 @@ export default function DocList({ tipo, titulo }) {
             </div>
           ))
       ) : (
-        // ✅ Vista normal con filtro mes
         <div className="space-y-3">
           {items.map((d) => (
             <Card key={d.id} d={d} isAdmin={isAdmin} removeDoc={removeDoc} />
@@ -97,7 +95,16 @@ export default function DocList({ tipo, titulo }) {
   );
 }
 
+// Card modificado para usar links de Drive
 function Card({ d, isAdmin, removeDoc }) {
+  // Extraemos el ID del PDF de la URL de Drive si es preview
+  // Para descarga directa: https://drive.google.com/uc?export=download&id=ID_DEL_PDF
+  const driveIdMatch = d.url.match(/\/d\/(.*?)\//);
+  const driveId = driveIdMatch ? driveIdMatch[1] : null;
+  const downloadUrl = driveId
+    ? `https://drive.google.com/uc?export=download&id=${driveId}`
+    : d.url; // fallback si no encuentra ID
+
   return (
     <div className="bg-white border border-gray-200 p-4 flex items-start justify-between gap-4">
       <div className="flex-1 min-w-0">
@@ -111,13 +118,9 @@ function Card({ d, isAdmin, removeDoc }) {
           <span className="text-xs text-gray-400">{d.fechaCorta}</span>
         </div>
 
-        <h3 className="text-sm font-semibold text-[#1a3a6c] mb-0.5">
-          {d.titulo}
-        </h3>
+        <h3 className="text-sm font-semibold text-[#1a3a6c] mb-0.5">{d.titulo}</h3>
 
-        {d.descripcion && (
-          <p className="text-xs text-gray-500">{d.descripcion}</p>
-        )}
+        {d.descripcion && <p className="text-xs text-gray-500">{d.descripcion}</p>}
 
         <p className="text-xs text-gray-400 mt-1">{d.nombreArchivo}</p>
       </div>
@@ -133,8 +136,7 @@ function Card({ d, isAdmin, removeDoc }) {
         </a>
 
         <a
-          href={d.url}
-          download={d.nombreArchivo}
+          href={downloadUrl}
           className="bg-[#1a3a6c] text-white text-xs px-3 py-1.5 hover:bg-[#0d2550] no-underline"
         >
           Descargar

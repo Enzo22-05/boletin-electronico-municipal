@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAdmin } from "../context/AdminContext";
 import { useDocs } from "../context/DocumentsContext";
@@ -6,14 +6,12 @@ import { TIPOS_DOCUMENTO } from "../data";
 
 export default function AdminSubir() {
   const { isAdmin } = useAdmin();
-  const { docs, addDoc, removeDoc } = useDocs();
-
-  const fileRef = useRef(null);
+  const { addDoc } = useDocs();
 
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [tipo, setTipo] = useState(TIPOS_DOCUMENTO[0]);
-  const [archivo, setArchivo] = useState(null);
+  const [archivo, setArchivo] = useState(""); // ahora guarda el link
   const [fechaPublicacion, setFechaPublicacion] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -30,51 +28,35 @@ export default function AdminSubir() {
     );
   }
 
-  const handleFile = (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-
-    if (f.type !== "application/pdf") {
-      setError("Solo se permiten archivos PDF.");
-      return;
-    }
-
-    setArchivo(f);
-    setError("");
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     if (!titulo.trim()) {
       setError("El título es obligatorio.");
       return;
     }
-  
-    if (!archivo) {
-      setError("Seleccioná un archivo PDF.");
+
+    if (!archivo.trim()) {
+      setError("Ingresá el link del PDF de Google Drive.");
       return;
     }
-  
+
     if (!fechaPublicacion) {
       setError("Seleccioná una fecha de publicación.");
       return;
     }
-  
+
     setLoading(true);
-  
+
     const fechaObj = new Date(fechaPublicacion + "T00:00:00");
-  
-    // ✅ GENERAMOS URL TEMPORAL
-    const url = URL.createObjectURL(archivo);
-  
+
     addDoc({
       id: Date.now(),
       titulo,
       descripcion,
       tipo,
-      url,
-      nombreArchivo: archivo.name,
+      url: archivo, // ahora usamos directamente el link de Drive
+      nombreArchivo: titulo, // puedes cambiarlo si querés otro nombre
       fecha: fechaObj.toLocaleDateString("es-AR", {
         day: "2-digit",
         month: "long",
@@ -85,16 +67,16 @@ export default function AdminSubir() {
       anio: fechaObj.getFullYear(),
       fechaISO: fechaObj.toISOString(),
     });
-  
+
     setLoading(false);
     setSuccess(true);
-  
+
+    // limpiar campos
     setTitulo("");
     setDescripcion("");
     setTipo(TIPOS_DOCUMENTO[0]);
-    setArchivo(null);
+    setArchivo("");
     setFechaPublicacion("");
-    if (fileRef.current) fileRef.current.value = "";
   };
 
   return (
@@ -127,10 +109,8 @@ export default function AdminSubir() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           {/* Tipo y título */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">
                 Tipo de documento <span className="text-red-500">*</span>
@@ -141,7 +121,9 @@ export default function AdminSubir() {
                 className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-[#1a3a6c] bg-white"
               >
                 {TIPOS_DOCUMENTO.map((t) => (
-                  <option key={t} value={t}>{t}</option>
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
                 ))}
               </select>
             </div>
@@ -190,34 +172,20 @@ export default function AdminSubir() {
             />
           </div>
 
-          {/* Archivo */}
+          {/* Link PDF */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
-              Archivo PDF <span className="text-red-500">*</span>
+              Link del PDF en Google Drive <span className="text-red-500">*</span>
             </label>
-            <div
-              onClick={() => fileRef.current?.click()}
-              className="border-2 border-dashed border-gray-300 hover:border-[#1a3a6c] transition-colors p-5 text-center cursor-pointer"
-            >
-              {archivo ? (
-                <p className="text-sm text-[#1a3a6c] font-semibold">{archivo.name}</p>
-              ) : (
-                <>
-                  <p className="text-sm text-gray-400">
-                    Hacé clic para seleccionar un PDF
-                  </p>
-                  <p className="text-xs text-gray-300 mt-0.5">
-                    Solo archivos .pdf
-                  </p>
-                </>
-              )}
-            </div>
             <input
-              ref={fileRef}
-              type="file"
-              accept="application/pdf"
-              onChange={handleFile}
-              className="hidden"
+              type="url"
+              value={archivo}
+              onChange={(e) => {
+                setArchivo(e.target.value);
+                setError("");
+              }}
+              placeholder="https://drive.google.com/file/d/ID_DEL_PDF/preview"
+              className="w-full border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-[#1a3a6c]"
             />
           </div>
 
