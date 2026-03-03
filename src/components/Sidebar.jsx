@@ -74,7 +74,12 @@ export default function Sidebar() {
             onChange={(e) => handleAnio(parseInt(e.target.value))}
             className="text-xs border border-gray-300 px-1 py-0.5 focus:outline-none focus:border-[#1a3a6c] text-[#1a3a6c] font-semibold"
           >
-            {[new Date().getFullYear(), new Date().getFullYear() - 1, new Date().getFullYear() - 2].map((y) => (
+            {[new Date().getFullYear(), new Date().getFullYear() - 1, new Date().getFullYear() - 2, new Date().getFullYear() - 3,
+             new Date().getFullYear() - 4, new Date().getFullYear() - 5, 
+             new Date().getFullYear() - 6, new Date().getFullYear() - 7, 
+             new Date().getFullYear() - 8, new Date().getFullYear() - 9, 
+             new Date().getFullYear() - 10, new Date().getFullYear() - 11
+            ].map((y) => (
               <option key={y} value={y}>{y}</option>
             ))}
           </select>
