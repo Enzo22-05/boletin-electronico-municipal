@@ -23,23 +23,30 @@ function Layout() {
       <TopBar />
       <Header />
       <Navbar />
-      <div className="max-w-6xl mx-auto w-full px-4 py-5 flex gap-5 items-start flex-1">
-        <Sidebar />
-        <main className="flex-1 min-w-0">
-        <Routes>
-  <Route path="/" element={<Inicio />} />
-  <Route path="/ordenanzas" element={<Ordenanzas />} />
-  <Route path="/decretos" element={<Decretos />} />
-  <Route path="/resoluciones" element={<Resoluciones />} />
-  <Route path="/licitaciones" element={<Licitaciones />} />
-  <Route path="/ejecucion-presupuestaria" element={<EjecucionPresupuestaria />} />
-  <Route path="/legislacion" element={<Legislacion />} />
-  <Route path="/contacto" element={<Contacto />} />
-  <Route path="/admin/login" element={<AdminLogin />} />
-  <Route path="/admin/subir" element={<AdminSubir />} />
-</Routes>
-        </main>
-      </div>
+      <div className="max-w-6xl mx-auto w-full px-4 py-5 flex flex-col md:flex-row gap-5 items-start flex-1">
+
+  {/* SIDEBAR */}
+  <div className="order-1 md:order-2 w-full md:w-80">
+    <Sidebar />
+  </div>
+
+  {/* CONTENIDO */}
+  <main className="order-2 md:order-1 flex-1 w-full">
+    <Routes>
+      <Route path="/" element={<Inicio />} />
+      <Route path="/ordenanzas" element={<Ordenanzas />} />
+      <Route path="/decretos" element={<Decretos />} />
+      <Route path="/resoluciones" element={<Resoluciones />} />
+      <Route path="/licitaciones" element={<Licitaciones />} />
+      <Route path="/ejecucion-presupuestaria" element={<EjecucionPresupuestaria />} />
+      <Route path="/legislacion" element={<Legislacion />} />
+      <Route path="/contacto" element={<Contacto />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/subir" element={<AdminSubir />} />
+    </Routes>
+  </main>
+
+</div>
       <Footer />
     </div>
   );

@@ -65,7 +65,7 @@ export default function Sidebar() {
   const recientes = [...docs].slice(0, 5);
 
   return (
-    <aside className="hidden md:block w-60 shrink-0">
+    <aside className="w-full md:w-64">
 
       <Widget title="Calendario">
         <div className="flex items-center justify-between mb-2">
