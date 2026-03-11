@@ -4227,9 +4227,74 @@
       "fechaCorta": "07/01/2026",
       "mes": 0,
       "anio": 2026
-    }
+    },
     
 
 
+    {
+      "id": 419,
+      "titulo": "Oredenanza N°537",
+      "tipo": "Legislación",
+      "url": "https://drive.google.com/file/d/1BW8PiE8l1JG49luxnS_pphRnSfR7G3BH/preview?usp=sharing",
+      "descripcion": "Boletin oficial digital",
+      "fechaCorta": "04/03/2026",
+      "mes": 2,
+      "anio": 2026
+    },
+    {
+      "id": 420,
+      "titulo": "Decreto N°14",
+      "tipo": "Legislación",
+      "url": "https://drive.google.com/file/d/17-NLhF7MpfWeTcrGBm5Jwj4fNctIKCY6/preview?usp=sharing",
+      "descripcion": "Boletin oficial digital",
+      "fechaCorta": "04/03/2026",
+      "mes": 2,
+      "anio": 2026
+    },
+
+
+
+
+
+    {
+      "id": 421,
+      "titulo": "Ejecucion presupuestaria diciembre",
+      "tipo": "EjecucionPresupuestaria",
+      "url": "https://drive.google.com/file/d/1VCxPSyUmerHmfwrBmgwOy0iZVvKFdzy1/preview?usp=sharing",
+      "descripcion": "Ingresos",
+      "fechaCorta": "01/12/2024",
+      "mes": 11,
+      "anio": 2024
+    },
+    {
+      "id": 422,
+      "titulo": "Ejecucion presupuestaria diciembre",
+      "tipo": "EjecucionPresupuestaria",
+      "url": "https://drive.google.com/file/d/190cQe_oCBud7PQZZrQnI2JF_S5KnZG4J/preview?usp=sharing",
+      "descripcion": "Egresos",
+      "fechaCorta": "01/12/2024",
+      "mes": 11,
+      "anio": 2024
+    },
+    {
+      "id": 423,
+      "titulo": "Ejecucion presupuestaria diciembre",
+      "tipo": "EjecucionPresupuestaria",
+      "url": "https://drive.google.com/file/d/1GEFi77z5d03EnSGP77Z-VR_1xSzuvZUI/preview?usp=sharing",
+      "descripcion": "Ingresos",
+      "fechaCorta": "01/12/2025",
+      "mes": 11,
+      "anio": 2025
+    },
+    {
+      "id": 424,
+      "titulo": "Ejecucion presupuestaria diciembre",
+      "tipo": "EjecucionPresupuestaria",
+      "url": "https://drive.google.com/file/d/16CnkTB5R8i8Esw7AsNwGGgj920Rz1-g3/preview?usp=sharing",
+      "descripcion": "Egresos",
+      "fechaCorta": "01/12/2025",
+      "mes": 11,
+      "anio": 2025
+    }
 
 ]
